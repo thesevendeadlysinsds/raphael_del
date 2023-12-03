@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nombres de cliques</title>
+    <link rel="icon" href="unnamed.gif">
+</head>
+<body>
+    <a href="index.html"><img src="unnamed.gif" class="logo"></a>
+    <h1>Nombres de cliques</h1>
+    <br><br>
+    <center><p>Nombre de clics : <span id="count">0</span></p>
+        <p>Clics par seconde : <span id="clicksPerSecond">0</span></p>
+        <p>Durée restante : <span id="timeLeft">30</span> secondes</p>
+        <p id="message"></p>
+        <div id="imageContainer"></div>
+    <img src="cliquez ici.png" class="mezange"></center>
+</body>
+</html>
+<style>
+    h1 {
+        text-align: center;
+        color: red;
+        margin-top: -80px;
+    }
+    body {
+        background-color: yellow;
+    }
+    .mezange {
+      cursor: pointer; 
+    }
+    #count {
+        color: red;
+        font-size: 20pt;
+        font-weight: bolder;
+        border: black solid 2px;
+        border-radius: 10px;
+    }
+</style>
+<script>
+    const image = document.querySelector('.mezange');
+  let clickCount = 0;
+  let startTime = new Date().getTime();
+  const duration = 30; // Durée en secondes
+  const countElement = document.getElementById('count');
+  const clicksPerSecondElement = document.getElementById('clicksPerSecond');
+  const timeLeftElement = document.getElementById('timeLeft');
+  const messageElement = document.getElementById('message');
+
+  function updateClicksPerSecond() {
+    const currentTime = new Date().getTime();
+    const elapsedTime = (currentTime - startTime) / 1000;
+    const clicksPerSecond = clickCount / elapsedTime;
+    clicksPerSecondElement.textContent = clicksPerSecond.toFixed(2);
+  }
+
+  function updateTimer() {
+    const currentTime = new Date().getTime();
+    const elapsedTime = (currentTime - startTime) / 1000;
+    const timeLeft = Math.max(duration - elapsedTime, 0);
+    timeLeftElement.textContent = timeLeft.toFixed(0);
+    if (timeLeft <= 0) {
+      stopCounting();
+    }
+  }
+
+  function stopCounting() {
+    image.removeEventListener('click', handleClick);
+    updateClicksPerSecond();
+  }
+
+  function handleClick() {
+    clickCount++;
+    countElement.textContent = clickCount;
+    updateClicksPerSecond();
+    updateTimer();
+
+    // Afficher un message à certains paliers de clics
+    if (clickCount === 10) {
+      messageElement.textContent = "Vous avez atteint 10 clics !";
+    } else if (clickCount === 20) {
+      messageElement.textContent = "20 clics déjà !";
+    } else if (clickCount === 30) {
+      messageElement.textContent = "30 clics, continuez !";
+    } else if (clickCount === 77) {
+      messageElement.textContent = "Vincent Mézange";
+    } else if (clickCount === 100) {
+      const newImage = document.createElement('img');
+      newImage.src = '100.jpg'; // Remplace avec ton chemin vers l'image
+      newImage.style.maxWidth = '700px';
+      imageContainer.appendChild(newImage);
+      messageElement.textContent = "100 clicks !";
+}}
+
+  image.addEventListener('click', handleClick);
+
+  // Mettre à jour la durée restante toutes les secondes
+  setInterval(updateTimer, 1000);
+</script>
